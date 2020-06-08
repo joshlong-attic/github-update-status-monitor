@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e74acf20f3b19e085c0b6b68048f1a655e64ce56a93d78ded72130b4275024a6"
+            "sha256": "50f6bdd64ea30ccf3f754e4efe5147f469aca3aa78eb3525f64be544057bdb5a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -42,6 +42,14 @@
             ],
             "version": "==2.9"
         },
+        "pg8000": {
+            "hashes": [
+                "sha256:2bfdd03c2623302af655ef089a958ff329b2035c9d9aea406b5e4dac9c007524",
+                "sha256:eb42ba62fbc048c91d5cf1ac729e0ea4ee329cc526bddafed4e7a8aa6b57fbbb"
+            ],
+            "index": "pypi",
+            "version": "==1.15.2"
+        },
         "python-dateutil": {
             "hashes": [
                 "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c",
@@ -57,6 +65,13 @@
             ],
             "index": "pypi",
             "version": "==2.23.0"
+        },
+        "scramp": {
+            "hashes": [
+                "sha256:a2c740624642de84f77327da8f56b2f030c5afd10deccaedbb8eb6108a66dfc1",
+                "sha256:b57eb0ae2f9240b15b5d0dab2ea8e40b43eef13ac66d3f627a79ef85a6da0927"
+            ],
+            "version": "==1.1.1"
         },
         "simple-python-github-client": {
             "hashes": [

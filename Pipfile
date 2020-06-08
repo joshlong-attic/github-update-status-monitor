@@ -14,6 +14,7 @@ verify_ssl = true
 simple-python-github-client = "*"
 requests = "*"
 python-dateutil = "*"
+pg8000 = "*"
 
 [requires]
 python_version = "3.7"
