@@ -59,3 +59,5 @@ if __name__ == '__main__':
         if status == 'completed' and conclusion == 'success':
             last_run_datetime = dateutil.parser.parse(r['updated_at'])
             print(last_run_datetime)
+
+    # figure out how to issue a repository dispatch
