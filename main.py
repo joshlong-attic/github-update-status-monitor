@@ -42,7 +42,8 @@ if __name__ == '__main__':
         event_mappings = mappings.EventMapping.read_event_mappings(json_fp)
         print(event_mappings)
         # foreach mapping:
-        # check to see if there's a recent successful build. if there is and it's newer than the last successful build
+        # check to see if there's a recent successful build.
+        # if there is and it's newer than the last successful build
         # note it in the DB, trigger an event
         for em in event_mappings:
             recent_runs = actions.list_workflow_runs(
@@ -56,22 +57,22 @@ if __name__ == '__main__':
             updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
 
 
-def old_main():
-    #
-
-    update_status_service = UpdateStatusService(
-        pg8000.connect(username, password=pw, database=db, host=host))
-
-    recent_runs = \
-        actions.list_workflow_runs(owner=owner, repo=repo, workflow_file_name_or_id=file_name, status='success')[
-            'workflow_runs']
-
-    for r in recent_runs:
-        print(r)
-        status = r['status']
-        conclusion = r['conclusion']
-        if status == 'completed' and conclusion == 'success':
-            last_run_datetime = dateutil.parser.parse(r['updated_at'])
-            print(last_run_datetime)
-
-    # figure out how to issue a repository dispatch
+# def old_main():
+#     #
+#
+#     update_status_service = UpdateStatusService(
+#         pg8000.connect(username, password=pw, database=db, host=host))
+#
+#     recent_runs = \
+#         actions.list_workflow_runs(owner=owner, repo=repo, workflow_file_name_or_id=file_name, status='success')[
+#             'workflow_runs']
+#
+#     for r in recent_runs:
+#         print(r)
+#         status = r['status']
+#         conclusion = r['conclusion']
+#         if status == 'completed' and conclusion == 'success':
+#             last_run_datetime = dateutil.parser.parse(r['updated_at'])
+#             print(last_run_datetime)
+#
+#     # figure out how to issue a repository dispatch
