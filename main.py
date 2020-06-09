@@ -18,7 +18,6 @@ import typing
 import dateutil.parser
 import datetime
 import github
-# https://github.com/tlocke/pg8000
 import mappings
 import pg8000
 import actions
@@ -57,11 +56,11 @@ if __name__ == '__main__':
             updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
             db_row = db_service.read_run_for(em.source.owner, em.source.repository)
 
+
             def publish_event():
                 print('publishing an update-event.', em.destination.owner, '/', em.destination.repository,
-                      'has changed so invoking',
-                      em.destination.owner, '/', em.destination.repository)
-                github_client.repos().create_repository_dispatch_event(
+                      'has changed so invoking', em.destination.owner, '/', em.destination.repository)
+                github_client.repositories().create_repository_dispatch_event(
                     em.destination.owner, em.destination.repository, 'update-event', '{}')
                 db_service.write_run_for(em.source.owner, em.source.repository, datetime.datetime.now())
 
