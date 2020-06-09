@@ -1,9 +1,9 @@
 import typing
 
-import pg8000
 import datetime
 
 import types
+import db
 
 
 class GithubActionsRunService(object):
@@ -19,36 +19,34 @@ class GithubActionsRunService(object):
             CREATE UNIQUE INDEX if not exists hash ON github_action_runs(owner, repository);
         '''.strip().split(';')
 
-    # def execute_in_tx(self, callback: types.LambdaType):
-    #     with sqlite3.connect(':memory:') as conn:
-    #         curs = conn.cursor()
-    #         try:
-    #             pass  # SQL commands go here
-    #         except Exception as e:
-    #             print(e)
-    #         finally:
-    #             if curs:
-    #                 curs.close()
+    def __init__(self, connection_builder: types.LambdaType) -> None:
+        self.connection_builder = connection_builder
 
-    def __init__(self, connection: pg8000.Connection) -> None:
-        self.connection = connection
+        def callback(cursor):
+            sql = [a.strip() for a in self.initialization_sql if a.strip() != '']
+            for line in sql:
+                cursor.execute(line)
 
-        for sql in self.initialization_sql:
-            if sql.strip() != '':
-                self.connection.run(sql)
-        self.connection.commit()
+        db.execute_in_transaction(self.connection_builder, callback)
 
     def write_run_for(self, owner: str, repository: str, dt: datetime.datetime) -> None:
         sql = '''
             insert into github_action_runs( owner, repository, updated_at )
-            values( :owner, :repository, :updated_at_1 )
+            values( %s, %s, %s )
             on conflict (owner, repository)
-            do update set updated_at = :updated_at_2
+            do update set updated_at = %s
         '''
-        self.connection.run(sql, owner=owner, repository=repository, updated_at_1=dt, updated_at_2=dt)
-        self.connection.commit()
+
+        def callback(cursor):
+            cursor.execute(sql, (owner, repository, dt, dt,))
+
+        db.execute_in_transaction(self.connection_builder, callback)
 
     def read_run_for(self, owner: str, repository: str) -> typing.List[typing.Dict]:
-        return self.connection.run(
-            'select * from github_action_runs where owner = :owner and repository = :repository  limit 1 ',
-            owner=owner, repository=repository)
+        sql = 'select * from github_action_runs where owner = %s and repository = %s  limit 1 '
+
+        def callback(cursor):
+            cursor.execute(sql, (owner, repository))
+            return cursor.fetchone()
+
+        return db.execute_in_transaction(self.connection_builder, callback)

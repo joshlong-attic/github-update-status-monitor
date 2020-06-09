@@ -17,11 +17,8 @@ import typing
 
 import dateutil.parser
 import github
-import pg8000  # https://github.com/tlocke/pg8000
-
+# https://github.com/tlocke/pg8000
 import mappings
-
-
 
 if __name__ == '__main__':
 
@@ -55,7 +52,6 @@ if __name__ == '__main__':
             successful_runs.sort(key=key_generator, reverse=True)
             latest_successful_run = successful_runs[0]
             updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
-
 
 # def old_main():
 #     #
