@@ -53,21 +53,21 @@ if __name__ == '__main__':
             successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
             successful_runs.sort(key=key_generator, reverse=True)
             latest_successful_run = successful_runs[0]
-            updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
+            github_updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
             db_row = db_service.read_run_for(em.source.owner, em.source.repository)
 
-
             def publish_event():
-                print('publishing an update-event.', em.destination.owner, '/', em.destination.repository,
+                print('publishing an update-event.', em.source.owner, '/', em.source.repository,
                       'has changed so invoking', em.destination.owner, '/', em.destination.repository)
-                github_client.repositories().create_repository_dispatch_event(
-                    em.destination.owner, em.destination.repository, 'update-event', '{}')
+                response  = github_client.repositories().create_repository_dispatch_event(
+                    em.destination.owner, em.destination.repository, 'update-event', {})
+                print(response.status_code)
                 db_service.write_run_for(em.source.owner, em.source.repository, datetime.datetime.now())
 
 
             if db_row is not None:
                 _, _, _, db_updated_at = db_row
-                if updated_at > db_updated_at:
+                if github_updated_at > db_updated_at:
                     publish_event()
             else:
                 publish_event()
