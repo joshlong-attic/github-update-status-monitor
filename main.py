@@ -12,15 +12,17 @@ latest successful run is and then check it against the latest recorded successfu
 database. We'd need a PostgreSQL database or something. Or even just a Redis instance.
 '''
 
+import datetime
 import os
+import sys
 import typing
 
 import dateutil.parser
-import datetime
 import github
-import mappings
 import pg8000
+
 import actions
+import mappings
 
 
 def build_connection() -> pg8000.Connection:
@@ -31,12 +33,11 @@ def build_connection() -> pg8000.Connection:
     return pg8000.connect(username, password=pw, database=db, host=host)
 
 
-if __name__ == '__main__':
-
-    def key_generator(d: typing.Dict) -> int:
-        return d['run_number']
+def key_generator(d: typing.Dict) -> int:
+    return d['run_number']
 
 
+def main(_: typing.List[str]):
     github_token = os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN')
     github_client = github.SimpleGithubClient(github_token)
     db_service = actions.GithubActionsRunService(build_connection)
@@ -57,13 +58,13 @@ if __name__ == '__main__':
             db_row = db_service.read_run_for(em.source.owner, em.source.repository)
 
             def publish_event():
-                print('publishing an update-event.', em.source.owner, '/', em.source.repository,
+                print('publishing an update-event from', em.source.owner, '/', em.source.repository,
                       'has changed so invoking', em.destination.owner, '/', em.destination.repository)
-                response  = github_client.repositories().create_repository_dispatch_event(
-                    em.destination.owner, em.destination.repository, 'update-event', {})
+                response = github_client.repositories().create_repository_dispatch_event(
+                    em.destination.owner, em.destination.repository, 'update-event',
+                    {'timestamp': datetime.datetime.now().timestamp() * 1000})
                 print(response.status_code)
                 db_service.write_run_for(em.source.owner, em.source.repository, datetime.datetime.now())
-
 
             if db_row is not None:
                 _, _, _, db_updated_at = db_row
@@ -71,3 +72,6 @@ if __name__ == '__main__':
                     publish_event()
             else:
                 publish_event()
+
+
+main(sys.argv)
