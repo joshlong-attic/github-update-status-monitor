@@ -38,7 +38,7 @@ def key_generator(d: typing.Dict) -> int:
 
 
 def main(_: typing.List[str]):
-    github_token = os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN')
+    github_token = os.environ.get('PERSONAL_ACCESS_TOKEN')
     github_client = github.SimpleGithubClient(github_token)
     db_service = actions.GithubActionsRunService(build_connection)
 
