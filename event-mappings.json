@@ -1,0 +1,15 @@
+{
+  "mappings": [
+    {
+      "source": {
+        "owner": "joshlong",
+        "repository": "jwt-spring-boot-starter",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "joshlong",
+        "repository": "simple-python-github-client-test"
+      }
+    }
+  ]
+}
