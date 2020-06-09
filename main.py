@@ -70,7 +70,10 @@ def main(_: typing.List[str]):
                 _, _, _, db_updated_at = db_row
                 if github_updated_at > db_updated_at:
                     publish_event()
+                else :
+                    print('the date is older. no need to run.')
             else:
+
                 publish_event()
 
 
