@@ -47,6 +47,9 @@ class GithubActionsRunService(object):
 
         def callback(cursor):
             cursor.execute(sql, (owner, repository))
-            return cursor.fetchone()
+            the_list = cursor.fetchall()
+            if len(the_list) == 1:
+                return the_list[0]
+            return None
 
         return db.execute_in_transaction(self.connection_builder, callback)

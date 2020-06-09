@@ -50,25 +50,8 @@ if __name__ == '__main__':
                 status='success')['workflow_runs']
             successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
             successful_runs.sort(key=key_generator, reverse=True)
+
             latest_successful_run = successful_runs[0]
             updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
 
-# def old_main():
-#     #
-#
-#     update_status_service = UpdateStatusService(
-#         pg8000.connect(username, password=pw, database=db, host=host))
-#
-#     recent_runs = \
-#         actions.list_workflow_runs(owner=owner, repo=repo, workflow_file_name_or_id=file_name, status='success')[
-#             'workflow_runs']
-#
-#     for r in recent_runs:
-#         print(r)
-#         status = r['status']
-#         conclusion = r['conclusion']
-#         if status == 'completed' and conclusion == 'success':
-#             last_run_datetime = dateutil.parser.parse(r['updated_at'])
-#             print(last_run_datetime)
-#
-#     # figure out how to issue a repository dispatch
+
