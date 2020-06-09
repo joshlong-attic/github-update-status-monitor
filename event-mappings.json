@@ -4,7 +4,7 @@
       "source": {
         "owner": "joshlong",
         "repository": "jwt-spring-boot-starter",
-        "workflow_file_name": "deploy.yml"
+        "workflow_file_name": "build.yml"
       },
       "target": {
         "owner": "joshlong",

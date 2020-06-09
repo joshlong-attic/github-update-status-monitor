@@ -12,21 +12,22 @@ latest successful run is and then check it against the latest recorded successfu
 database. We'd need a PostgreSQL database or something. Or even just a Redis instance.
 '''
 
-import json
 import os
-import mappings
+import typing
+
 import dateutil.parser
 import github
 import pg8000  # https://github.com/tlocke/pg8000
 
+import mappings
 
-class UpdateStatusService(object):
-
-    def __init__(self, connection: pg8000.Connection) -> None:
-        self.connection = connection
 
 
 if __name__ == '__main__':
+
+    def key_generator(d: typing.Dict) -> int:
+        return d['run_number']
+
 
     github_token = os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN')
     db = os.environ.get('UMS_DB_NAME', 'ttd')
@@ -43,11 +44,20 @@ if __name__ == '__main__':
         # foreach mapping:
         # check to see if there's a recent successful build. if there is and it's newer than the last successful build
         # note it in the DB, trigger an event
+        for em in event_mappings:
+            recent_runs = actions.list_workflow_runs(
+                owner=em.source.owner,
+                repo=em.source.repository,
+                workflow_file_name_or_id=em.source.workflow_file_name,
+                status='success')['workflow_runs']
+            successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
+            successful_runs.sort(key=key_generator, reverse=True)
+            latest_successful_run = successful_runs[0]
+            updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
 
 
 def old_main():
     #
-
 
     update_status_service = UpdateStatusService(
         pg8000.connect(username, password=pw, database=db, host=host))
