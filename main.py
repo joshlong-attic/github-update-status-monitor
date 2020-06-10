@@ -53,9 +53,12 @@ def main(_: typing.List[str]):
                 workflow_file_name_or_id=em.source.workflow_file_name,
                 status='success')
 
+            print(recent_runs_response)
+
             if 'workflow_runs' in recent_runs_response:
                 recent_runs = recent_runs_response['workflow_runs']
-                successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
+                successful_runs = [a for a in recent_runs if
+                                   a['status'] == 'completed' and a['conclusion'] == 'success']
                 successful_runs.sort(key=key_generator, reverse=True)
                 latest_successful_run = successful_runs[0]
                 github_updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
