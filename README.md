@@ -1,5 +1,7 @@
 # Github Update Status Monitor  
 
+![Build Status](https://github.com/joshlong/github-update-status-monitor/workflows/Deploy%20the%20Github%20project%20update%20status%20monitor/badge.svg)
+
 This service monitors upstream Github projects and - on their successful changes - triggers a redeploy of other services. 
 
 ## Configuring a Mapping 
