@@ -2,13 +2,35 @@
   "mappings": [
     {
       "source": {
-        "owner": "joshlong",
-        "repository": "jwt-spring-boot-starter",
-        "workflow_file_name": "build.yml"
+        "owner": "this-week-in",
+        "repository": "bookmark-api",
+        "workflow_file_name": "deploy.yml"
       },
       "target": {
-        "owner": "joshlong",
-        "repository": "simple-python-github-client-test"
+        "owner": "the-trump-dump",
+        "repository": "bookmark-api"
+      }
+    },
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-editor-view",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "the-trump-dump",
+        "repository": "bookmark-editor-view"
+      }
+    },
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-ingest-job",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "the-trump-dump",
+        "repository": "bookmark-ingest-job"
       }
     }
   ]
