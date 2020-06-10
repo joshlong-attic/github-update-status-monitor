@@ -46,35 +46,38 @@ def main(_: typing.List[str]):
         event_mappings = mappings.EventMapping.read_event_mappings(json_fp)
 
         for em in event_mappings:
-            recent_runs = github_client.actions().list_workflow_runs(
+
+            recent_runs_response = github_client.actions().list_workflow_runs(
                 owner=em.source.owner,
                 repo=em.source.repository,
                 workflow_file_name_or_id=em.source.workflow_file_name,
-                status='success')['workflow_runs']
-            successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
-            successful_runs.sort(key=key_generator, reverse=True)
-            latest_successful_run = successful_runs[0]
-            github_updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
-            db_row = db_service.read_run_for(em.source.owner, em.source.repository)
+                status='success')
 
-            def publish_event():
-                print('publishing an update-event from', em.source.owner, '/', em.source.repository,
-                      'has changed so invoking', em.destination.owner, '/', em.destination.repository)
-                response = github_client.repositories().create_repository_dispatch_event(
-                    em.destination.owner, em.destination.repository, 'update-event',
-                    {'timestamp': datetime.datetime.now().timestamp() * 1000})
-                print(response.status_code)
-                db_service.write_run_for(em.source.owner, em.source.repository, datetime.datetime.now())
+            if 'workflow_runs' in recent_runs_response:
+                recent_runs = recent_runs_response['workflow_runs']
+                successful_runs = [a for a in recent_runs if a['status'] == 'completed' and a['conclusion'] == 'success']
+                successful_runs.sort(key=key_generator, reverse=True)
+                latest_successful_run = successful_runs[0]
+                github_updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
+                db_row = db_service.read_run_for(em.source.owner, em.source.repository)
 
-            if db_row is not None:
-                _, _, _, db_updated_at = db_row
-                if github_updated_at > db_updated_at:
-                    publish_event()
+                def publish_event():
+                    print('publishing an update-event from', em.source.owner, '/', em.source.repository,
+                          'has changed so invoking', em.destination.owner, '/', em.destination.repository)
+                    response = github_client.repositories().create_repository_dispatch_event(
+                        em.destination.owner, em.destination.repository, 'update-event',
+                        {'timestamp': datetime.datetime.now().timestamp() * 1000})
+                    print(response.status_code)
+                    db_service.write_run_for(em.source.owner, em.source.repository, datetime.datetime.now())
+
+                if db_row is not None:
+                    _, _, _, db_updated_at = db_row
+                    if github_updated_at > db_updated_at:
+                        publish_event()
+                    else:
+                        print('the date is older. no need to run.')
                 else:
-                    print('the date is older. no need to run.')
-            else:
-
-                publish_event()
+                    publish_event()
 
 
 main(sys.argv)
