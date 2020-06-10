@@ -42,7 +42,7 @@ def main(_: typing.List[str]):
     github_client = github.SimpleGithubClient(github_token)
     db_service = actions.GithubActionsRunService(build_connection)
 
-    with open('event-mappings.json') as json_fp:
+    with open('mappings.json') as json_fp:
         event_mappings = mappings.EventMapping.read_event_mappings(json_fp)
 
         for em in event_mappings:
