@@ -1,13 +1,13 @@
 name: Deploy the Github project update status monitor
 
 env:
-  UMS_DB_USERNAME:  ${{ secrets.UMS_DB_USERNAME }}
   PERSONAL_ACCESS_TOKEN:  ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   ARTIFACTORY_USERNAME:  ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD:  ${{ secrets.ARTIFACTORY_PASSWORD }}
-  UMS_DB_HOST:  ${{ secrets.UMS_DB_HOST }}
-  UMS_DB_NAME:  ${{ secrets.UMS_DB_NAME }}
-  UMS_DB_PASSWORD:  ${{ secrets.UMS_DB_PASSWORD }}
+  GUSM_DB_USERNAME:  ${{ secrets.GUSM_DB_USERNAME }}
+  GUSM_DB_HOST:  ${{ secrets.GUSM_DB_HOST }}
+  GUSM_DB_NAME:  ${{ secrets.GUSM_DB_NAME }}
+  GUSM_DB_PASSWORD:  ${{ secrets.GUSM_DB_PASSWORD }}
  
 
 on:
@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Updates the remote profile page
-        run: hub --version && ./run.sh
+      - name: Run the Github Update Status Monitor
+        run: ./run.sh
 
 

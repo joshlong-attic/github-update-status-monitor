@@ -26,10 +26,10 @@ import mappings
 
 
 def build_connection() -> pg8000.Connection:
-    db = os.environ.get('UMS_DB_NAME', 'ttd')
-    host = os.environ.get('UMS_DB_HOST', 'localhost')
-    username = os.environ.get('UMS_DB_USERNAME', 'orders')
-    pw = os.environ.get('UMS_DB_PASSWORD', 'orders')
+    db = os.environ.get('GUSM_DB_NAME', 'ttd')
+    host = os.environ.get('GUSM_DB_HOST', 'localhost')
+    username = os.environ.get('GUSM_DB_USERNAME', 'orders')
+    pw = os.environ.get('GUSM_DB_PASSWORD', 'orders')
     return pg8000.connect(username, password=pw, database=db, host=host)
 
 
@@ -70,7 +70,7 @@ def main(_: typing.List[str]):
                 _, _, _, db_updated_at = db_row
                 if github_updated_at > db_updated_at:
                     publish_event()
-                else :
+                else:
                     print('the date is older. no need to run.')
             else:
 
