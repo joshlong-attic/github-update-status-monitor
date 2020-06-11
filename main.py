@@ -63,7 +63,8 @@ def main(_: typing.List[str]):
         if 'workflow_runs' in recent_runs_response:
 
             if 'total_count' in recent_runs_response and recent_runs_response['total_count'] == 0:
-                logging.info(f'There are no runs for {event_mapping.source.owner}/{event_mapping.source.repository}. Skipping.')
+                logging.info(
+                    f'There are no runs for {event_mapping.source.owner}/{event_mapping.source.repository}. Skipping.')
                 return
 
             recent_runs = recent_runs_response['workflow_runs']
@@ -75,10 +76,9 @@ def main(_: typing.List[str]):
             db_row = db_service.read_run_for(event_mapping.source.owner, event_mapping.source.repository)
 
             def publish_event():
-                logging.info('publishing an update-event from', event_mapping.source.owner, '/',
-                             event_mapping.source.repository,
-                             'has changed so invoking', event_mapping.destination.owner, '/',
-                             event_mapping.destination.repository)
+                logging.info(
+                    f'publishing an update-event from {event_mapping.source.owner}/ {event_mapping.source.repository} '
+                    f'has changed so invoking {event_mapping.destination.owner}/{event_mapping.destination.repository}')
                 response = github_client.repositories().create_repository_dispatch_event(
                     event_mapping.destination.owner, event_mapping.destination.repository, 'update-event',
                     {'timestamp': datetime.datetime.now().timestamp() * 1000})
