@@ -11,7 +11,7 @@ We could perhaps configure it to check the latest run, then see when the
 latest successful run is and then check it against the latest recorded successful run in a
 database. We'd need a PostgreSQL database or something. Or even just a Redis instance.
 '''
-
+import base64
 import datetime
 import logging
 import os
@@ -64,7 +64,8 @@ def main(_: typing.List[str]):
 
             if 'total_count' in recent_runs_response and recent_runs_response['total_count'] == 0:
                 logging.info(
-                    f'There are no runs for {event_mapping.source.owner}/{event_mapping.source.repository}. Skipping.')
+                    f'There are no runs for {event_mapping.source.owner}/'
+                    f'{event_mapping.source.repository}. Skipping.')
                 return
 
             recent_runs = recent_runs_response['workflow_runs']
@@ -73,18 +74,35 @@ def main(_: typing.List[str]):
             successful_runs.sort(key=key_generator, reverse=True)
             latest_successful_run = successful_runs[0]
             github_updated_at = dateutil.parser.parse(latest_successful_run['updated_at'])
+            print(latest_successful_run)
+
+            github_sha = ''
+            if 'head_sha' in latest_successful_run:
+                github_sha = latest_successful_run['head_sha']
+
             db_row = db_service.read_run_for(event_mapping.source.owner, event_mapping.source.repository)
 
             def publish_event():
+
                 logging.info(
                     f'publishing an update-event from {event_mapping.source.owner}/ {event_mapping.source.repository} '
                     f'has changed so invoking {event_mapping.destination.owner}/{event_mapping.destination.repository}')
+                # github_repository = f'{event_mapping.source.owner}/{event_mapping.source.repository}'
+                event_payload = {
+                    'gusm_owner': event_mapping.source.owner,
+                    'gusm_repository': event_mapping.source.repository,
+                    'gusm_sha': github_sha}
                 response = github_client.repositories().create_repository_dispatch_event(
                     event_mapping.destination.owner, event_mapping.destination.repository, 'update-event',
-                    {'timestamp': datetime.datetime.now().timestamp() * 1000})
-                print(response.status_code)
-                db_service.write_run_for(event_mapping.source.owner, event_mapping.source.repository,
-                                         datetime.datetime.now())
+                    event_payload)
+
+                if 200 <= response.status_code <= 300:
+                    logging.info('successfully issued the repository event')
+
+                db_service.write_run_for(
+                    event_mapping.source.owner,
+                    event_mapping.source.repository,
+                    datetime.datetime.now())
 
             if db_row is not None:
                 _, _, _, db_updated_at = db_row
@@ -94,6 +112,9 @@ def main(_: typing.List[str]):
                     logging.info('the date is older. no need to run.')
             else:
                 publish_event()
+
+            # todo: remove this!
+            #publish_event()
 
     with open('mappings.json') as json_fp:
         event_mappings = mappings.EventMapping.read_event_mappings(json_fp)
