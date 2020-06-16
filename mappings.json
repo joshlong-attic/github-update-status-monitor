@@ -32,6 +32,17 @@
         "owner": "the-trump-dump",
         "repository": "bookmark-ingest-job"
       }
+    },
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-ingest-job",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "this-week-in-spring",
+        "repository": "bookmark-ingest-job"
+      }
     }
   ]
 }
