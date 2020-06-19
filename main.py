@@ -11,7 +11,6 @@ We could perhaps configure it to check the latest run, then see when the
 latest successful run is and then check it against the latest recorded successful run in a
 database. We'd need a PostgreSQL database or something. Or even just a Redis instance.
 '''
-import base64
 import datetime
 import logging
 import os
@@ -34,7 +33,6 @@ def build_connection() -> pg8000.Connection:
     username = os.environ.get('GUSM_DB_USERNAME', 'orders')
     pw = os.environ.get('GUSM_DB_PASSWORD', 'orders')
     return pg8000.connect(username, password=pw, database=db, host=host)
-
 
 def key_generator(d: typing.Dict) -> int:
     return d['run_number']
@@ -114,7 +112,7 @@ def main(_: typing.List[str]):
                 publish_event()
 
             # todo: remove this!
-            #publish_event()
+            # publish_event()
 
     with open('mappings.json') as json_fp:
         event_mappings = mappings.EventMapping.read_event_mappings(json_fp)
