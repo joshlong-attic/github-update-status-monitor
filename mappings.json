@@ -1,68 +1,71 @@
-[
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-ingest-job",
-      "workflow_file_name": "deploy.yml"
+{
+  "mappings":
+  [
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-ingest-job",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "this-week-in-spring",
+        "repository": "bookmark-ingest-job"
+      }
     },
-    "target": {
-      "owner": "this-week-in-spring",
-      "repository": "bookmark-ingest-job"
-    }
-  },
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-api",
-      "workflow_file_name": "deploy.yml"
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-api",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "this-week-in-spring",
+        "repository": "bookmark-api"
+      }
     },
-    "target": {
-      "owner": "this-week-in-spring",
-      "repository": "bookmark-api"
-    }
-  },
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-editor-view",
-      "workflow_file_name": "deploy.yml"
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-editor-view",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "this-week-in-spring",
+        "repository": "bookmark-editor-view"
+      }
     },
-    "target": {
-      "owner": "this-week-in-spring",
-      "repository": "bookmark-editor-view"
-    }
-  },
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-ingest-job",
-      "workflow_file_name": "deploy.yml"
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-ingest-job",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "the-trump-dump",
+        "repository": "bookmark-ingest-job"
+      }
     },
-    "target": {
-      "owner": "the-trump-dump",
-      "repository": "bookmark-ingest-job"
-    }
-  },
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-api",
-      "workflow_file_name": "deploy.yml"
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-api",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "the-trump-dump",
+        "repository": "bookmark-api"
+      }
     },
-    "target": {
-      "owner": "the-trump-dump",
-      "repository": "bookmark-api"
+    {
+      "source": {
+        "owner": "this-week-in",
+        "repository": "bookmark-editor-view",
+        "workflow_file_name": "deploy.yml"
+      },
+      "target": {
+        "owner": "the-trump-dump",
+        "repository": "bookmark-editor-view"
+      }
     }
-  },
-  {
-    "source": {
-      "owner": "this-week-in",
-      "repository": "bookmark-editor-view",
-      "workflow_file_name": "deploy.yml"
-    },
-    "target": {
-      "owner": "the-trump-dump",
-      "repository": "bookmark-editor-view"
-    }
-  }
-]
+  ]
+}

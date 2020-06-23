@@ -85,7 +85,6 @@ def main(_: typing.List[str]):
                 logging.info(
                     f'publishing an update-event from {event_mapping.source.owner}/ {event_mapping.source.repository} '
                     f'has changed so invoking {event_mapping.destination.owner}/{event_mapping.destination.repository}')
-                # github_repository = f'{event_mapping.source.owner}/{event_mapping.source.repository}'
                 event_payload = {
                     'gusm_owner': event_mapping.source.owner,
                     'gusm_repository': event_mapping.source.repository,
